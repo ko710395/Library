@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Register</title>
+</head>
+<script src="https://vuejs.org/js/vue.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<body>
+    <div id="app">
+        用户名： <input type="text" v-model='username'>
+        密码： <input type="password" v-model="password">
+        <ul>
+           <!-- <li v-for="item in list" :key="item"> -->
+                <button @click="register()">点击注册</button>
+           <!-- </li> -->
+        </ul>
+        <img :src="url" alt="">
+    </div>
+ 
+<a href="/">登录</a>
+<script>
+// axios.defaults.headers.post['content-type'] = 'application/x-www-form-urlencoded'
+window.app = new Vue({
+    el: '#app',
+    data () {
+        return {
+            username: '',
+            password: '',
+            url: ''
+        }
+    },
+    created () {
+        // axios.get('')
+        this.url = '/static/123.png'//
+    },
+    methods: {
+        register (AA) {
+            console.log('注册')
+            axios.post('/register/', {
+                name: this.username,
+                pwd: this.password
+            }, {
+                headers: {
+                    'content-type': 'application/x-www-form-urlencoded'
+                }
+            }).then(res => {
+                console.log(res) 
+            }).catch(err => {
+                console.log(err)
+            })
+        }
+    }
+})
+</script>
+</body>
+</html>

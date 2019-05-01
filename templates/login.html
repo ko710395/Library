@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Login</title>
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+</head>
+<script src="https://vuejs.org/js/vue.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+<body>
+    <div id="app">
+        用户名:<el-input v-model='username' placeholder="请输入用户名"></el-input>
+        密码:<el-input v-model='password' placeholder="请输入密码" show-password></el-input>
+            <el-button type="primary" round @click="login">登录</el-button>
+            <el-button type="text" @click="gotoregister">前往注册</el-button>
+    </div>
+
+<script>
+window.app = new Vue({
+    el: '#app',
+    data () {
+        return {
+            username: '',
+            password: '',
+            url: ''
+        }
+    },
+    methods: {
+        login () {
+            console.log('登录')
+            axios.post('/login/', {
+                name: this.username,
+                pwd: this.password
+            }, {
+                headers: {
+                    'content-type': 'application/x-www-form-urlencoded'
+                }
+            }).then(res =>{
+                console.log(res.data.data)
+                if (res.data.data == "Login Successfully!"){
+                    window.location.href = "/search/"
+                }
+                else {
+                    alert(res.data.data)
+                }
+            }).catch(err =>{
+                console.log(err)
+            })
+        },
+
+        gotoregister () {
+            window.location.href = "/register/"
+        }
+    }
+})
+</script>
+</body>
+</html>

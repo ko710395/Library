@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Search</title>
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+</head>
+<script src="https://vuejs.org/js/vue.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+<body>
+    <div id = "app">
+        搜索栏(以下均为选填，不填则不做限制)：<br>
+        书名：<el-input v-model="name" placeholder="在这里输入书名"></el-input>
+        作者：<el-input v-model="author" placeholder="在这里输入作者"></el-input>
+        出版社：<el-input v-model="publishinghouse" placeholder="在这里输入出版社"></el-input>
+        分类：
+                <el-checkbox-group v-model="category">
+                  <el-checkbox label="小说"></el-checkbox>
+                  <el-checkbox label="传记"></el-checkbox>
+                  <el-checkbox label="科幻"></el-checkbox>
+                  <el-checkbox label="言情"></el-checkbox>
+                  <el-checkbox label="古典"></el-checkbox>
+                </el-checkbox-group>
+        <el-button type="primary" @click="search" >搜索</el-button>
+        <el-button type="text" @click="reset">清空搜索框</el-button>
+        <br>
+        <br>
+        <el-button type="primary" @click="i_like">我的收藏夹</el-button>
+        <br>
+        <el-table :data="tableData" border style="width: 100%" v-show="if_show">
+        <el-table-column prop="name" label="书名" width=180></el-table-column>
+        <el-table-column prop="author" label="作者" width=180></el-table-column>
+        <el-table-column prop="publishinghouse" label="出版社" width=180></el-table-column>
+        <el-table-column prop="category" label="分类" width=180></el-table-column>
+        <el-table-column prop="id" width=180>
+            <template slot-scope="scope">
+            <el-button type="primary" @click="reading(scope.row)">点击阅读</el-button>
+            </template>
+        </el-table-column>
+        </el-table>
+
+        <el-input type="textarea" :rows="10" v-model="textarea" readonly v-show="if_show_area"></el-input>
+        <el-button type="primary" @click="ilike" v-show="if_show2">加入收藏</el-button>
+        <el-button type="primary" @click="nolike" v-show="if_show3">取消收藏</el-button>
+
+        <br><br>
+
+        <el-table :data="tableDataLike" border style="width: 100%" v-show="if_show_like">
+        <el-table-column prop="name" label="书名" width=180></el-table-column>
+        <el-table-column prop="author" label="作者" width=180></el-table-column>
+        <el-table-column prop="publishinghouse" label="出版社" width=180></el-table-column>
+        <el-table-column prop="category" label="分类" width=180></el-table-column>
+        <el-table-column prop="id" width=180>
+            <template slot-scope="scope">
+            <el-button type="primary" @click="reading(scope.row)">点击阅读</el-button>
+            </template>
+        </el-table-column>
+        </el-table>
+        <br>
+        <br>
+        <el-button type="primary" @click="logout">登出</el-button>
+    </div>
+
+<script>
+window.app = new Vue({
+    el:"#app",
+    data () {
+        return {
+            id: '',
+            name: '',
+            author: '',
+            publishinghouse: '',
+            category: [],
+            tableData: [],
+            tableDataLike: [],
+            textarea: '',
+            if_show: false,
+            if_show2: false,
+            if_show3: false,
+            if_show_like: false,
+            if_show_area: false,
+            rowbookid: ''
+        }
+    },
+
+    methods: {
+        reset () {
+            this.name = '',
+            this.author = '',
+            this.publishinghouse = '',
+            this.category = []
+        },
+
+        search () {
+            app.tableData = []
+            axios.post('/search/', {
+                name: this.name,
+                author: this.author,
+                publishinghouse: this.publishinghouse,
+                category: this.category
+            }, {
+                head: {
+                    'content-type': 'application/x-www-form-urlencoded'
+                }
+            }).then(res=>{
+                console.log(res)
+                if (res.data != '') {
+                    k=0
+                    while (res.data.data[k]) {
+                        var book = {
+                            'id': res.data.data[k].id,
+                            'name': res.data.data[k].Name,
+                            'author': res.data.data[k].Author,
+                            'publishinghouse': res.data.data[k].PublishingHouse,
+                            'category': res.data.data[k].Category
+                        }
+                        this.tableData.push(book)
+                        k++
+                    }
+                }
+            }).catch(err=>{
+                console.log(err)
+            })
+            this.if_show = true
+        },
+
+        reading (row2) {
+            console.log(row2.id)
+            axios.post('/reading/',{
+                id: row2.id
+            }).then(res => {
+                this.rowbookid = row2.id
+                this.textarea = res.data.data
+                this.if_show_area = true
+                console.log(res.data)
+            }).catch(err =>{
+                console.log(err)
+            })
+            axios.post('/if_in_like/',{
+                id: row2.id
+            }).then(res=>{
+                if (res.data.data == true) {
+                    console.log(res.data.data)
+                    this.if_show2 = false
+                    this.if_show3 = true
+                }
+                else {
+                    console.log(res.data.data)
+                    this.if_show3 = false
+                    this.if_show2 = true
+                }
+            }).catch(err=>{
+                console.log(err)
+            })
+        },
+
+        ilike () {
+            axios.post('/like/',{
+                bookid: this.rowbookid
+            }).then(res => {
+                alert(res.data.data)
+                console.log(this.rowbookid)
+                console.log(res)
+                window.location.href = "/search/"
+            }).catch(err => {
+                console.log(err)
+            })
+        },
+
+        nolike () {
+            axios.post('/nolike/',{
+                bookid: this.rowbookid
+            }).then(res =>{
+                alert(res.data.data)
+                console.log(this.rowbookid)
+                console.log(res)
+                window.location.href = "/search/"
+            }).catch(err =>{
+                console.log(err)
+            })
+        },
+
+        i_like () {
+            app.tableDataLike = []
+            axios.post('/what_like/', {
+                name: this.name,
+                author: this.author,
+                publishinghouse: this.publishinghouse,
+                category: this.category
+            }, {
+                head: {
+                    'content-type': 'application/x-www-form-urlencoded'
+                }
+            }).then(res=>{
+                console.log(res)
+                if (res.data != '') {
+                    k=0
+                    while (res.data.data[k]) {
+                        var book = {
+                            'id': res.data.data[k].id,
+                            'name': res.data.data[k].Name,
+                            'author': res.data.data[k].Author,
+                            'publishinghouse': res.data.data[k].PublishingHouse,
+                            'category': res.data.data[k].Category
+                        }
+                        this.tableDataLike.push(book)
+                        k++
+                    }
+                }
+                this.if_show_like = true
+            }).catch(err=>{
+                console.log(err)
+            })
+        },
+
+        logout () {
+            axios.get('/logout/'
+                ).then(res =>{
+                    console.log(res)
+                    alert(res.data.data)
+                    if (res.data.success == true) {
+                        window.location.href = "/"
+                    }
+                }).catch(err =>{
+                    console.log(err)
+                })
+        }
+    }
+})
+</script>
+</body>
+</html>

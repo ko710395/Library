@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Register</title>
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+</head>
+<script src="https://vuejs.org/js/vue.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+<body>
+    <div id="app">
+            用户名:<el-input v-model='username' placeholder="请输入用户名"></el-input>
+            密码:<el-input v-model='password' placeholder="请输入密码" show-password></el-input>
+                <el-button type="primary" round @click="register">注册</el-button>
+                <el-button type="text" @click="gotologin">前往登录</el-button>
+        <!-- <img :src="url" alt=""> -->
+    </div>
+<script>
+window.app = new Vue({
+    el: '#app',
+    data () {
+        return {
+            username: '',
+            password: '',
+            url: ''
+        }
+    },
+    created () {
+        this.url = '/static/123.png'
+    },
+    methods: {
+        register (AA) {
+            console.log('注册')
+            axios.post('/register/', {
+                name: this.username,
+                pwd: this.password
+            }, {
+                headers: {
+                    'content-type': 'application/x-www-form-urlencoded'
+                }
+            }).then(res => {
+                console.log(res) 
+                if (res.data.data == "Register Successfully!"){
+                    alert(res.data.data)
+                    window.location.href = "/login/"
+                }
+                else {
+                    alert(res.data.data)
+                }
+            }).catch(err => {
+                console.log(err)
+            })
+        },
+
+        gotologin () {
+            window.location.href = "/login/"
+        }
+    }
+})
+// import {gotologin,gotoregister} from './index.html'
+</script>
+</body>
+</html>

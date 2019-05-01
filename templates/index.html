@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>首页</title>
+</head>
+<script src="https://vuejs.org/js/vue.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<body>
+    <div id="app">
+        <ul>
+            这是首页<br>
+            <button @click="gotologin">前往登录</button>
+            <button @click="gotoregister()">前往注册</button>
+        </ul>
+    </div>
+<script>
+    window.app = new Vue({
+        el: '#app',
+        data () {
+            return {
+                a:0
+            }
+        },
+        methods: {
+            gotologin () {
+                console.log("goto login")
+                window.location.href = "./login/"
+            },
+            gotoregister () {
+                console.log("goto register")
+                window.location.href = "./register/"
+            }
+        }
+    })
+    // export {gotologin,gotoregister}
+</script>
+</html>
