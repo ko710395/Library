@@ -1,7 +1,5 @@
 from flask import Flask,render_template,flash,redirect,url_for,Blueprint
-from flask_login import LoginManager,login_user,UserMixin,logout_user,login_required,confirm_login
-from flask_wtf import FlaskForm
-from flask_moment import Moment
+from flask_login import LoginManager,login_user,UserMixin,logout_user,login_required
 from flask_sqlalchemy import SQLAlchemy
 from flask_bootstrap import Bootstrap
 import sys
@@ -20,7 +18,6 @@ app.config['JSON_AS_ASCII'] = False
 
 db = SQLAlchemy()
 db.init_app(app)
-moment = Moment(app)
 login_manager = LoginManager()
 login_manager.session_protection = 'strong'
 login_manager.login_view = 'blog.login'

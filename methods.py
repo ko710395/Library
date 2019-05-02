@@ -1,6 +1,6 @@
-from flask import Flask,render_template,flash,Blueprint,redirect,url_for,jsonify,request,Request
+from flask import Flask,render_template,Blueprint,jsonify,request,Request
 from database import Users,Books,Relationship
-from flask_login import login_manager,login_user,UserMixin,logout_user,login_required,confirm_login,current_user
+from flask_login import login_manager,login_user,UserMixin,logout_user,login_required,current_user
 from _init_ import login_manager,db,app
 import json,os,re
 from sqlalchemy import and_
@@ -28,10 +28,6 @@ class Login():
             data = json.loads(data)
             db.session.commit()
             user = Users.query.filter(Users.id == data['name']).first()
-            # str1 = "%"
-            # user = Users.query.filter(Users.id.like(str1)).first()
-            # print(str1)
-            # print(user)
             if user is not None and user.pwd == data['pwd']:
                 login_user(user)
                 return jsonify(

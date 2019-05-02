@@ -1,7 +1,6 @@
 from database import Users
 from _init_ import login_manager,db,app
 import json,os
-from werkzeug.utils import secure_filename
 from methods import Login,Search
 from flask import Blueprint
 from flask_login import login_required
@@ -32,6 +31,7 @@ def logout():
     return Login.logout()
 
 @blog.route("/search/",methods=['GET','POST'])
+@login_required
 def search():
     return Search.search()
 
