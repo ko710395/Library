@@ -10,12 +10,13 @@
 <script src="https://vuejs.org/js/vue.js"></script>
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+<script src="../static/node_modules/xss/dist/xss.js"></script>
 <body>
     <div id="app">
-            用户名:<el-input v-model='username' placeholder="请输入用户名"></el-input>
+            用户名:<el-input v-model='username' placeholder="请输入用户名" stripIgnoreTag=true></el-input>
             密码:<el-input v-model='password' placeholder="请输入密码" show-password></el-input>
                 <el-button type="primary" round @click="register">注册</el-button>
-                <el-button type="text" @click="gotologin">前往登录</el-button>
+                <el-button type="text" @click="gotologin">前往登录</el-button><br>
         <!-- <img :src="url" alt=""> -->
     </div>
 <script>
@@ -34,12 +35,15 @@ window.app = new Vue({
     methods: {
         register (AA) {
             console.log('注册')
+            var kk = filterXSS(this.username)
+            console.log(kk)
+            this.username = kk
             axios.post('/register/', {
                 name: this.username,
                 pwd: this.password
             }, {
                 headers: {
-                    'content-type': 'application/x-www-form-urlencoded'
+                    // 'content-type': 'application/x-www-form-urlencoded'
                 }
             }).then(res => {
                 console.log(res) 

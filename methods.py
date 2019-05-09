@@ -1,7 +1,7 @@
 from flask import Flask,render_template,Blueprint,jsonify,request,Request
 from database import Users,Books,Relationship
 from flask_login import login_manager,login_user,UserMixin,logout_user,login_required,current_user
-from _init_ import login_manager,db,app
+from _init_ import login_manager,db,app,csrf
 import json,os,re
 from sqlalchemy import and_
 
@@ -46,6 +46,7 @@ class Login():
     def register():
         if request.method == 'POST':
             data = request.get_data().decode('utf-8')
+            print(data)
             data = json.loads(data)
             res = Login.pwd(data['pwd'])
             if res != "true":

@@ -1,5 +1,5 @@
 from database import Users
-from _init_ import login_manager,db,app
+from _init_ import login_manager,db,app,csrf
 import json,os
 from methods import Login,Search
 from flask import Blueprint
@@ -21,6 +21,7 @@ def index():
 def login():
     return Login.login()
 
+@csrf.exempt
 @blog.route("/register/",methods=['GET','POST'])
 def register():
     return Login.register()
