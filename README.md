@@ -11,6 +11,8 @@
     
 前端用到了Element组件库，用axios发请求；数据库用的MySQL
 
+这个项目有个小问题，npm init生成的文件夹被移动到了static里面，因为我不会在不使用Nginx等搭服务器的情况下修改服务器目录，只会从static里读取，以后再说
+
 Flask用到的扩展有：
 
     1. flask_login 用于登录登出管理 
