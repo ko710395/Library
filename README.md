@@ -19,6 +19,8 @@ Flask用到的扩展有：
 
     3. flask_sqlalchemy 用于连接数据库
 
+    4. flask_wtf 用到里面的token
+
 终端运行_init_.py即可
 
 由于这次还要学下GitHub怎么用的所以很可能出现神奇现象，具体会是啥我也不知道
