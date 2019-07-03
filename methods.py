@@ -88,7 +88,7 @@ class Search():
         if request.method == 'POST':
             data = request.get_data().decode('utf-8')
             data = json.loads(data)
-            book_name, book_author, book_publishinghouse= "%" # 书名，作者，出版社
+            book_name = book_author = book_publishinghouse = "%" # 书名，作者，出版社,用%来
             book_category = [] # 分类
             if (data['name']):
                 book_name = book_name + data['name'] + "%"
