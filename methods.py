@@ -80,7 +80,7 @@ class Login():
             success = True,
             data = "Logout Successfully!"
         )
-    
+
 
 
 class Search():
@@ -88,27 +88,23 @@ class Search():
         if request.method == 'POST':
             data = request.get_data().decode('utf-8')
             data = json.loads(data)
-            str_data1 = "%" #书名
-            str_data2 = "%" #作者
-            str_data3 = "%" #出版社
-            str_data4 = []  #分类
+            book_name, book_author, book_publishinghouse= "%" # 书名，作者，出版社
+            book_category = [] # 分类
             if (data['name']):
-                str_data1 = str_data1 + data['name'] + "%"
+                book_name = book_name + data['name'] + "%"
             if (data['author']):
-                str_data2 = str_data2 + data['author'] + "%"
+                book_author = book_author + data['author'] + "%"
             if (data['publishinghouse']):
-                str_data3 = str_data3 + data['publishinghouse'] + "%"
+                book_publishinghouse = book_publishinghouse + data['publishinghouse'] + "%"
             if (data['category']):
                 for x in data['category']:
                     x = "%" + x + "%"
-                    str_data4.append(x)
-            print(str_data4)
-            k = and_(*[Books.Category.like(x) for x in str_data4])
-            print(k)
+                    book_category.append(x)
+            k = and_(*[Books.Category.like(x) for x in book_category])
             db.session.commit()
-            data = Books.query.filter(Books.Name.like(str_data1), 
-                                      Books.Author.like(str_data2), 
-                                      Books.PublishingHouse.like(str_data3),
+            data = Books.query.filter(Books.Name.like(book_name), 
+                                      Books.Author.like(book_author), 
+                                      Books.PublishingHouse.like(book_publishinghouse),
                                       k).all()
             li = []
             for k in data:
@@ -123,6 +119,7 @@ class Search():
             )
         else:
             return render_template("search.html")
+
 
     def reading(): # 阅读，即打开文本，每本书都有个数字id并且后台以此id命名对应txt电子书
         if request.method == 'POST':
@@ -140,7 +137,6 @@ class Search():
                 data = "Incorrect Access!"
             )
 
-            
 
     def like():
         if request.method == 'POST':
@@ -156,24 +152,16 @@ class Search():
         else:
             return Search.what_like()
 
+
     def if_in_like():
         if request.method == 'POST':
             data = json.loads(request.get_data().decode('utf-8'))
             db.session.commit()
             rela = db.session.query(Relationship).filter(Relationship.id == current_user.id,
                                                         Relationship.books.like("%" + data['id'] + "%")).all()
-            # if rela:
-            #     return jsonify(
-            #         data = True
-            #     )
-            # else:
-            #     return jsonify(
-            #         data = False
-            #     )
             return jsonify(
                 data = bool(rela)
             )
-        
         else:
             return jsonify(
                 success = False,
@@ -192,12 +180,12 @@ class Search():
                 success = True,
                 data = '删除成功！'
             )
-        
         else:
             return jsonify(
                 success = False,
                 data = "Incorrect Access!"
             )
+
 
     def what_like():
         li = []
@@ -207,7 +195,6 @@ class Search():
         while x < len(res.books)-3:
             li.append(res.books[x:x+4])
             x = x + 5
-        print(li)
         li2 = []
         for y in li:
             db.session.commit()
