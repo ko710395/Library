@@ -84,11 +84,11 @@ class Login():
 
 
 class Search():
-    def search():   # *************************************** 这个需要进一步优化，但是优化方案暂时想不到
+    def search():   # *************************************** 搜索，这个需要进一步优化，但是优化方案暂时想不到
         if request.method == 'POST':
             data = request.get_data().decode('utf-8')
             data = json.loads(data)
-            book_name = book_author = book_publishinghouse = "%" # 书名，作者，出版社,用%来
+            book_name = book_author = book_publishinghouse = "%" # 书名，作者，出版社,在SQLAlchemy中用%表示任意字符，用于搜索
             book_category = [] # 分类
             if (data['name']):
                 book_name = book_name + data['name'] + "%"
@@ -138,7 +138,7 @@ class Search():
             )
 
 
-    def like():
+    def like(): # 添加收藏
         if request.method == 'POST':
             data = json.loads(request.get_data().decode('utf-8'))
             db.session.commit()
@@ -153,7 +153,7 @@ class Search():
             return Search.what_like()
 
 
-    def if_in_like():
+    def if_in_like(): # 查看是否已收藏
         if request.method == 'POST':
             data = json.loads(request.get_data().decode('utf-8'))
             db.session.commit()
@@ -169,7 +169,7 @@ class Search():
             )
 
 
-    def nolike():
+    def nolike(): # 取消收藏
         if request.method == 'POST':
             data = json.loads(request.get_data().decode('utf-8'))
             db.session.commit()
@@ -187,7 +187,7 @@ class Search():
             )
 
 
-    def what_like():
+    def what_like(): # 查看收藏夹
         li = []
         db.session.commit()
         res = Relationship.query.filter(Relationship.id == current_user.id).first()
