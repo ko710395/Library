@@ -1,21 +1,13 @@
-from flask import Flask,render_template,flash,redirect,url_for,Blueprint
-from flask_login import LoginManager,login_user,UserMixin,logout_user,login_required
+from flask import Flask,render_template,Blueprint
+from flask_login import LoginManager,login_user,UserMixin
 from flask_sqlalchemy import SQLAlchemy
-from flask_bootstrap import Bootstrap
 from flask_wtf.csrf import CsrfProtect
-import sys
-
-'''defaultencoding = 'utf-8'
-if sys.getdefaultencoding() != defaultencoding:
-    reload(sys)
-    sys.setdefaultencoding(defaultencoding)'''
 
 app = Flask(__name__)
 
-app.config['SECRET_KEY'] = 'SSLN'
-app.config['SQLALCHEMY_DATABASE_URI'] = "mysql+pymysql://root:123@127.0.0.1:3306/test"
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['JSON_AS_ASCII'] = False
+app.config['SECRET_KEY'] = 'MyFlaskApplication' # 当要使用Session或Cookies的时候需要这个配置，后面随便设置
+app.config['SQLALCHEMY_DATABASE_URI'] = "mysql+pymysql://root:123@127.0.0.1:3306/[MySQL db name]" # 连接SQL的URI，后面自行填写相关SQL信息
+app.config['JSON_AS_ASCII'] = False # 不转换为ASCII码输出，而是保留Unicode编码原样输出
 
 db = SQLAlchemy()
 db.init_app(app)
@@ -26,7 +18,6 @@ login_manager.login_view = 'blog.login'
 login_manager.init_app(app)
 
 csrf = CsrfProtect()
-# csrf.init_app(app)
 
 @login_manager.user_loader
 def load_user(user_id):
