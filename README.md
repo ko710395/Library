@@ -1,4 +1,4 @@
-基于VUE + Flask (Python3.0)的在线图书馆，期末作业性质
+基于VUE + Flask (Python3)的在线图书馆，期末作业性质
 
 实现功能：
 
